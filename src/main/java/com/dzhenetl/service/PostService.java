@@ -3,9 +3,11 @@ package com.dzhenetl.service;
 import com.dzhenetl.exception.NotFoundException;
 import com.dzhenetl.model.Post;
 import com.dzhenetl.repository.PostRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PostService {
 
     private final PostRepository repository;

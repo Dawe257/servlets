@@ -2,11 +2,13 @@ package com.dzhenetl.repository;
 
 import com.dzhenetl.exception.NotFoundException;
 import com.dzhenetl.model.Post;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@Repository
 public class PostRepository {
 
     private List<Post> repository;

@@ -3,12 +3,14 @@ package com.dzhenetl.controller;
 import com.dzhenetl.model.Post;
 import com.dzhenetl.service.PostService;
 import com.google.gson.Gson;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
+@Controller
 public class PostController {
 
     public static final String APPLICATION_JSON = "application/json";
