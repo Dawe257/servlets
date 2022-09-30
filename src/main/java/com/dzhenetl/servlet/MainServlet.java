@@ -1,8 +1,9 @@
 package com.dzhenetl.servlet;
 
+import com.dzhenetl.config.Config;
 import com.dzhenetl.controller.PostController;
-import com.dzhenetl.repository.PostRepository;
-import com.dzhenetl.service.PostService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +18,8 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void init() {
-        final PostRepository repository = new PostRepository();
-        final PostService service = new PostService(repository);
-        controller = new PostController(service);
+        ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        controller = context.getBean(PostController.class);
     }
 
     @Override
