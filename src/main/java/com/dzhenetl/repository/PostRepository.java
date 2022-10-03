@@ -5,38 +5,43 @@ import com.dzhenetl.model.Post;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PostRepository {
 
-    private final List<Post> repository;
-    private volatile int postCounter;
+    private final Map<Long, Post> repository;
+    private AtomicLong postCounter;
 
     public PostRepository() {
-        this.repository = new ArrayList<>();
-        postCounter = 0;
+        this.repository = new ConcurrentHashMap<>();
+        postCounter = new AtomicLong(0);
     }
 
     public List<Post> all() {
-        return repository;
+        return new ArrayList<>(repository.values());
     }
 
     public Optional<Post> getById(long id) {
-        return repository.stream().filter(p -> p.getId() == id).findFirst();
+        return Optional.of(repository.get(id));
     }
 
-    public synchronized Post save(Post post) {
+    public Post save(Post post) {
         if (post.getId() == 0) {
-            post.setId(++postCounter);
-            repository.add(post);
+            post.setId(postCounter.incrementAndGet());
+            repository.put(post.getId(), post);
         } else {
-            Post postToUpdate = this.getById(post.getId()).orElseThrow(NotFoundException::new);
+            Post postToUpdate = Optional.ofNullable(repository.get(post.getId())).orElseThrow(NotFoundException::new);
             postToUpdate.setContent(post.getContent());
         }
         return post;
     }
 
-    public synchronized void removeById(long id) {
-        repository.removeIf(p -> p.getId() == id);
+    public void removeById(long id) {
+
+        Optional.of(repository.remove(id)).orElseThrow(NotFoundException::new);
     }
 }
+
